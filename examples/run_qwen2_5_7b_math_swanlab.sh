@@ -11,13 +11,16 @@ SYSTEM_PROMPT="""You FIRST think about the reasoning process as an internal mono
  The reasoning process MUST BE enclosed within <think> </think> tags. The final answer MUST BE put in \boxed{} if it is a math problem."""
 
 python3 -m verl.trainer.main \
-    config=examples/grpo_example.yaml \
+    config=examples/config.yaml \
+    data.train_files=hiyouga/geometry3k@train \
+    data.val_files=hiyouga/geometry3k@test \
     data.system_prompt="${SYSTEM_PROMPT}" \
     data.train_files=${TRAIN_FILES:-hiyouga/math12k@train} \
     data.val_files=${VAL_FILES:-hiyouga/math12k@test} \
     data.max_prompt_length=${MPL:-2048} \
     data.max_response_length=${MRL:-2048} \
     worker.actor.model.model_path=${MODEL_DIR:-/mnt/models/models/public/Qwen/Qwen2.5/Qwen2.5-7B-Instruct/} \
+    worker.rollout.enable_chunked_prefill=false \
     worker.rollout.max_num_batched_tokens=${MNBT:-8192} \
     trainer.total_episodes=${TE:-30} \
     trainer.logger=['console','swanlab'] \

@@ -13,7 +13,7 @@ data:
   min_pixels: 262144
 
 algorithm:
-  adv_estimator: remax
+  adv_estimator: grpo
   kl_coef: 0.0
 
 worker:
@@ -22,7 +22,6 @@ worker:
     micro_batch_size_per_device_for_update: 4
     micro_batch_size_per_device_for_experience: 16
     max_grad_norm: 1.0
-    entropy_coeff: 1.0e-3
     use_kl_loss: true
     kl_loss_coef: 1.0e-2
     kl_loss_type: low_var_kl
@@ -53,6 +52,9 @@ worker:
     enable_chunked_prefill: false
     tensor_parallel_size: 2
     limit_images: 0
+    val_override_config:
+      temperature: 0.5
+      n: 1
 
   ref:
     fsdp:
@@ -68,7 +70,7 @@ worker:
 
 trainer:
   total_episodes: 15
-  logger: ["console", "wandb"]
+  logger: ["console"]
   project_name: easy_r1
   experiment_name: qwen2_5_7b_math
   n_gpus_per_node: 8
